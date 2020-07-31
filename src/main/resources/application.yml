@@ -1,0 +1,66 @@
+server:
+  port: ${PORT_SERVICE:8888}
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${DISCOVERY_URL:http://localhost:8761}/eureka/
+  healthcheck:
+      enabled: true
+  instance:
+      leaseRenewalIntervalInSeconds: 1
+      leaseExpirationDurationInSeconds: 2
+  registry-fetch-interval-seconds: 1
+
+spring:
+  application:
+    name: api-gateway
+
+zuul:
+  ribbon:
+    eager-load:
+      enabled: true
+  #ribbonIsolationStrategy: THREAD
+#  routes:
+#    accounts:
+#      path: /accounts/**
+#      serviceId: account-service
+#  semaphore:
+#    max-semaphores: 5
+  eureka:
+    customer-service:
+      semaphore:
+        maxSemaphores: 5
+        circuitBreaker:
+          requestVolumeThreshold: 3
+          sleepWindowInMilliseconds: 10000
+
+ribbon:
+  ReadTimeout: 600000
+
+#hystrix:
+#  command:
+#    customer-service:
+#      execution:
+#        isolation:
+#          strategy: SEMAPHORE
+#          semaphore: 10
+#          thread:
+#            timeoutInMilliseconds: 4000
+#      circuitBreaker:
+#        requestVolumeThreshold: 5
+#        sleepWindowInMilliseconds: 10000
+#    account-service:
+#      execution:
+#        isolation:
+#          strategy: THREAD
+#          thread:
+#            timeoutInMilliseconds: 5000
+#      circuitBreaker:
+#        requestVolumeThreshold: 10
+#        sleepWindowInMilliseconds: 10000
+
+logging:
+  level:
+    com.cyxtera.web.console.core.api.gateway: info
+    org.springframework.web: debug
